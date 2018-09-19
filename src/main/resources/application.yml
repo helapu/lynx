@@ -1,0 +1,61 @@
+#app
+server:
+  port: 8080
+  
+jwt:
+  invalidate-time: 172800
+  secret: 49f4c3f37b154be1aba6c495fbf97c1b
+
+lynx:
+  swagger-open: true  #是否开启swagger (true/false)
+  yunpian-apikey: e5049b80e388951b6a209b702bb1d93d
+  
+
+#spring
+spring:
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+    
+#出现错误时, 直接抛出异常
+#spring.mvc.throw-exception-if-no-handler-found=true
+#不要为我们工程中的资源文件建立映射
+#spring.resources.add-mappings=false
+
+#mybatis
+mybatis-plus:
+  #mapper-locations: classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath*:mybatis/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.helapu.lynx.entity
+  typeEnumsPackage: com.helapu.lynx.entity.enums
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: ID_WORKER
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_EMPTY
+      #驼峰下划线转换
+      #column-underline: true
+      #数据库大写下划线转换
+      #capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      db-type: h2
+    #刷新mapper 调试神器
+    refresh: true
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+##logging
+#logging:
+#  level: warn
