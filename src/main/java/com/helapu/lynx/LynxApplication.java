@@ -1,5 +1,6 @@
 package com.helapu.lynx;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner;
@@ -19,7 +20,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan(basePackages = {
         "com.helapu.lynx.config",
         "com.helapu.lynx.controller",
-        "com.helapu.lynx.service"})
+        "com.helapu.lynx.service",
+        "com.helapu.lynx.service.impl"})
 public class LynxApplication {
 
     protected final static Logger logger = LoggerFactory.getLogger(LynxApplication.class);

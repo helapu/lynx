@@ -17,8 +17,10 @@ import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.config.properties.JWTProperties;
 import com.helapu.lynx.entity.User;
+import com.helapu.lynx.entity.Verifycode;
 import com.helapu.lynx.mapper.UserMapper;
 import com.helapu.lynx.service.IUserService;
+import com.helapu.lynx.service.IVerifycodeService;
 
 import java.util.List;
 
@@ -31,6 +33,10 @@ public class SessionController extends ApiController {
 	
     @Autowired
     private IUserService userService;
+    
+    @Autowired
+    private IVerifycodeService verifycodeService;
+    
 	
     @Autowired
 	private JWTProperties jwtPropertis;
@@ -69,21 +75,31 @@ public class SessionController extends ApiController {
     	//
     	User user = userService.getOne(new QueryWrapper<User>()
     			.lambda().eq(User::getMobile, mobile));
-
-    	if(user == null) {
-    		// TODO 校验验证码
-    		
-        	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-
-    		User newUser = new User();
-    		newUser.setMobile(mobile);
-    		newUser.setEncryptedPassword( hashed );
-    		userService.save(newUser);
-    		
-    		return this.success(newUser);
-    	}else {
-    		return this.failed(ErrorCode.USER_EXIST);
+    	
+    	Verifycode lastRegisterCode = verifycodeService.getOne(new QueryWrapper<Verifycode>()
+    			.lambda().eq(Verifycode::getMobile, mobile)
+    			.eq(Verifycode::getType, "register")
+    			.eq(Verifycode::getCode, code));
+    	//
+		// 校验验证码
+    	if (lastRegisterCode == null) {
+    		return this.failed(ErrorCode.VERIFYCODE_NOTFOUND);
     	}
+    	if(user != null) {
+    		return this.failed(ErrorCode.USER_EXIST);
+
+    	}
+    	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+
+		User newUser = new User();
+		newUser.setMobile(mobile);
+		newUser.setEncryptedPassword( hashed );
+		userService.save(newUser);
+		
+		
+		
+		return this.success(newUser);
+    	
     }
 
     @PostMapping("/forgot")

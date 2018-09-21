@@ -29,6 +29,7 @@ CREATE TABLE verifycode
 	code        VARCHAR(30) NULL DEFAULT NULL COMMENT '验证码',
 	mobile      VARCHAR(30) NULL DEFAULT NULL COMMENT '手机号码',
 	type        VARCHAR(30) NULL DEFAULT NULL COMMENT '类型',
+	result_code INT         NULL DEFAULT NULL COMMENT '发送短信返回状态码',
 	message     VARCHAR(30) NULL DEFAULT NULL COMMENT '发送验证的反馈提示',
 	
 	PRIMARY KEY (id)

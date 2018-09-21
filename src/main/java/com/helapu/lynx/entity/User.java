@@ -16,7 +16,7 @@ import com.helapu.lynx.entity.enums.PhoneEnum;
  */
 public class User extends SuperEntity<User> {
 
-   private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
     private String nickname;
     private String username;

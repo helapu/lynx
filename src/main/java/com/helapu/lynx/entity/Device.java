@@ -6,8 +6,8 @@ public class Device extends SuperEntity<Device> {
 	
 	private String nickname;
 	private String productKey;
-	private String key;
-	private String secret;
+	private String deviceKey;
+	private String deviceSecret;
 	private String iotid;
 	private String utcActive;
 	private String status;
@@ -30,17 +30,17 @@ public class Device extends SuperEntity<Device> {
 	public void setProductKey(String productKey) {
 		this.productKey = productKey;
 	}
-	public String getKey() {
-		return key;
+	public String getDeviceKey() {
+		return deviceKey;
 	}
-	public void setKey(String key) {
-		this.key = key;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
-	public String getSecret() {
-		return secret;
+	public String getDeviceSecret() {
+		return deviceSecret;
 	}
-	public void setSecret(String secret) {
-		this.secret = secret;
+	public void setDeviceSecret(String deviceSecret) {
+		this.deviceSecret = deviceSecret;
 	}
 	public String getIotid() {
 		return iotid;

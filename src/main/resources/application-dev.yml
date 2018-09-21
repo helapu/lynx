@@ -8,9 +8,8 @@ jwt:
 
 lynx:
   swagger-open: true  #是否开启swagger (true/false)
-  yunpian-apikey: e5049b80e388951b6a209b702bb1d93d
+  yunpian: e5049b80e388951b6a209b702bb1d93d
   
-
 #spring
 spring:
   profiles:

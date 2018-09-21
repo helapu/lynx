@@ -1,12 +1,12 @@
 package com.helapu.lynx.controller;
 
-import javax.validation.constraints.Size;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,10 +32,24 @@ public class DeviceController extends ApiController {
 	@Autowired
     private IDeviceService deviceService;
    
+	@Autowired
+	private IUserService userService;
+	
     // 关注设备列表
     @GetMapping("/")
     @ApiOperation(value="设备列表")
     public R<Object> device_list() {
+
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User)subject.getSession().getAttribute("user");
+    	IPage<Device> pagedDevices = deviceService.page(new Page<Device>(1, 5), new QueryWrapper<Device>().orderByDesc("name"));
+
+    	return this.success(pagedDevices);
+    }
+    
+    @GetMapping("/{device_key}")
+    @ApiOperation(value="设备列表")
+    public R<Object> showDevice() {
 
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
@@ -57,7 +71,7 @@ public class DeviceController extends ApiController {
     }
     
     // 修改设备
-    @PostMapping("/")
+    @PutMapping("/{device_key}")
     @ApiOperation(value="设备列表")
     public R<Object> editDevice() {
 
@@ -69,9 +83,9 @@ public class DeviceController extends ApiController {
     
     
     // 删除设备
-    @PostMapping("/")
+    @DeleteMapping("/{device_key}")
     @ApiOperation(value="设备列表")
-    public R<Object> deleteDevice() {
+    public R<Object> unfollowDevice() {
 
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
@@ -81,7 +95,7 @@ public class DeviceController extends ApiController {
     
     
     // 历史数据记录
-    @PostMapping("/")
+    @GetMapping("/history_data")
     @ApiOperation(value="设备列表")
     public R<Object> historyData() {
 
@@ -92,7 +106,7 @@ public class DeviceController extends ApiController {
     }
     
     // 报警事件记录
-    @PostMapping("/")
+    @GetMapping("/history_alarm")
     @ApiOperation(value="设备列表")
     public R<Object> historyAlarm() {
 

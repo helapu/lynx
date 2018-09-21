@@ -10,7 +10,8 @@ public enum ErrorCode implements IErrorCode {
 	USER_EXIST(1000, "用户已经存在"),
 	USER_NOT_EXIST(1001, "用户不存在"),
 	USER_PASSWORD(1002, "用户密码错误"),
-	
+	VERIFYCODE_NOTFOUND(1003, "验证码没有找到"),
+	VERIFYCODE_EXPIRED(1004, "验证码过期"),
 	// 登录 授权
 	JWT_HEADER_NULL(1100, "未提供Authorization"),
 	JWT_HEADER_FORMAT(1101, "Authorization格式错误或者过期"),
