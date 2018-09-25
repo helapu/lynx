@@ -1,5 +1,10 @@
 package com.helapu.lynx.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 import java.util.Random;
 
 import javax.validation.constraints.Size;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.helapu.lynx.common.YunpianUtil;
@@ -32,40 +38,60 @@ public class VerifycodeController extends ApiController {
     public R<Object> register(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile) {
-		String beforeShuffle = "0123456789";
-		StringBuilder sb = new StringBuilder(4);
-		for(int i=0; i<4; i++) {
-			char ch= beforeShuffle.charAt(new Random().nextInt(beforeShuffle.length()));
-			sb.append(ch);
-		}
-    	String code = sb.toString();
-    	
-    	String resultMsg = YunpianUtil.sendVerifyCode(mobile, code);
-    	logger.warn("yunpian result " + resultMsg);
-    	
-    	
-    	Verifycode verifycode = new Verifycode(code, mobile, "register", resultMsg);
-    	verifycode.setMobile(mobile);
-    	verifycodeService.save(verifycode);
-    	
-    	return success( verifycode );
+		return sendCode(mobile, "register");
     }
     
 	@PostMapping("/forgot")
     @ApiOperation(value="注册验证码")
     public R<Object> forgot(String mobile) {
+		return sendCode(mobile, "forgot");
+    }
+	
+	private R<Object> sendCode(String mobile, String type) {
+		
 		String beforeShuffle = "0123456789";
 		StringBuilder sb = new StringBuilder(4);
 		for(int i=0; i<4; i++) {
 			char ch= beforeShuffle.charAt(new Random().nextInt(beforeShuffle.length()));
 			sb.append(ch);
 		}
+		Timestamp  now = new Timestamp(System.currentTimeMillis());
+		// 一分钟最多发送三条短信
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+ 
+		Calendar beforeTime = Calendar.getInstance();
+		beforeTime.add(Calendar.MINUTE, -2);// 3分钟之前的时间
+		beforeTime.getTime();
+		Date beforeD = beforeTime.getTime();
+		
+		int lastCodes = verifycodeService.count(new QueryWrapper<Verifycode>()
+				.lambda().eq(Verifycode::getMobile, mobile)
+				.ge(Verifycode::getCreatedAt, Timestamp.valueOf(sdf.format(beforeD)))
+				.isNotNull(Verifycode::getCreatedAt));
+		
+		logger.warn("verifycodes count " + lastCodes);
+		if (lastCodes > 3) {
+			return this.failed("一分钟最多发送三条短信");
+		}
+		
     	String code = sb.toString();
     	
-    	YunpianUtil.sendVerifyCode(mobile, code);
+    	Map<String, Object>  codeResult= YunpianUtil.sendVerifyCode(mobile, code);
     	
-    	return success(code);  	
-    }
+    	logger.warn("yunpian result " + codeResult );
+    	
+    	Verifycode verifycode = new Verifycode(code, mobile, type, (Integer)codeResult.get("code"), (String)codeResult.get("msg"));
+    	verifycode.setCreatedAt( now );
+
+    	verifycodeService.save(verifycode);
+    	
+    	if((Integer)codeResult.get("code") == 0) {
+        	return success( verifycode );
+    	}else {
+    		return this.failed( (String)codeResult.get("msg"));
+    	}
+    	
+	}
     
 }
 

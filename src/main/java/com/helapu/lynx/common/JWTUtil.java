@@ -11,11 +11,23 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 
 public class JWTUtil {
 
-	@Autowired
-	private static JWTProperties jwtPropertis;
+	
+//	
+//	@Value("$jwt.secret")
+//	public void setJwtSecret(String jwt) {
+//		JWTSECRET = jwt;
+//	}
+//	
+//	@Value("$jwt.invalidate")
+//	public void setInvalidate(long invalidate) {
+//		JWTINVALIDATE = invalidate;
+//	}
 	
     /**
      * 校验token是否正确
@@ -25,7 +37,7 @@ public class JWTUtil {
      */
     public static boolean verify(String token, String username) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256( JWTUtil.jwtPropertis.getSecret() );
+            Algorithm algorithm = Algorithm.HMAC256( JWTProperties.getSecret() );
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
                     .build();
@@ -57,12 +69,10 @@ public class JWTUtil {
      */
     public static String sign(String username) {
     	
-    	System.out.println("-----------");
-    	System.out.println(JWTUtil.jwtPropertis.getSecret());
         try {
         	
-            Date date = new Date(System.currentTimeMillis()+ JWTUtil.jwtPropertis.getInvalidateTime() );
-            Algorithm algorithm = Algorithm.HMAC256( JWTUtil.jwtPropertis.getSecret() );
+            Date date = new Date(System.currentTimeMillis()+ JWTProperties.getInvalidate() );
+            Algorithm algorithm = Algorithm.HMAC256( JWTProperties.getSecret() );
             // 附带username信息
             return JWT.create()
                     .withClaim("username", username)

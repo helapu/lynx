@@ -1,6 +1,7 @@
 package com.helapu.lynx.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -21,14 +22,14 @@ public class User extends SuperEntity<User> {
     private String nickname;
     private String username;
     
-    @TableField("mobile")
-    @TableLogic
     private String mobile;
     private String encryptedPassword;
     private String lastLoginAt;
     private String createdAt;
     
-
+    private List<Device> deviceList;
+    
+    
     public User() {
     }
     public User(String nickname) {
@@ -70,6 +71,13 @@ public class User extends SuperEntity<User> {
 	}
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+	
+	public List<Device> getDeviceList() {
+		return deviceList;
+	}
+	public void setDeviceList(List<Device> deviceList) {
+		this.deviceList = deviceList;
 	}
 	@Override
     public String toString() {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.mapper.UserMapper;
 import com.helapu.lynx.service.IUserService;
@@ -49,4 +50,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     			.lambda().eq(User::getMobile, mobile));
     }
 
+    public List<Device> findDeviceListByUserId(String userId) {
+    	return baseMapper.selectDeviceList(userId);
+    }
 }

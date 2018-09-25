@@ -3,10 +3,10 @@
 <mapper namespace="com.helapu.lynx.mapper.DeviceMapper">
 	
 	<!-- 通用查询映射结果 -->
-    <resultMap id="UserResultMap" type="com.helapu.lynx.entity.Device">
+    <resultMap id="DeviceResultMap" type="com.helapu.lynx.entity.Device">
         <id column="id" property="id"/>
-        <result column="mobile" property="mobile"/>
-        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="device_key" property="deviceKey" />
     </resultMap>
 
 
@@ -35,6 +35,14 @@
 		<where>
 			${ew.sqlSegment}
 		</where>
+	</select>
+	
+	<select id="selectDeviceListByUserId" parameterType="java.lang.String" resultMap="DeviceResultMap" >
+		
+		SELECT * FROM DEVICE
+		WHERE userId=#{userId}
+		
+		
 	</select>
 	
 </mapper>

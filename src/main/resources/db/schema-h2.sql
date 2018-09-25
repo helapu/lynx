@@ -13,7 +13,7 @@ CREATE TABLE user
 	email       VARCHAR(30) NULL DEFAULT NULL COMMENT '邮箱',
 	encrypted_password    VARCHAR(60) NULL DEFAULT NULL COMMENT '加密后的密码',
 	last_login_at VARCHAR(30) NULL DEFAULT NULL COMMENT '最后登录时间',
-	created_at  VARCHAR(30) NULL DEFAULT NULL COMMENT '创建时间',
+	created_at  DATETIME NULL DEFAULT NULL COMMENT '创建时间',
 
 	PRIMARY KEY (id)
 );
@@ -31,6 +31,7 @@ CREATE TABLE verifycode
 	type        VARCHAR(30) NULL DEFAULT NULL COMMENT '类型',
 	result_code INT         NULL DEFAULT NULL COMMENT '发送短信返回状态码',
 	message     VARCHAR(30) NULL DEFAULT NULL COMMENT '发送验证的反馈提示',
+	created_at  DATETIME NULL DEFAULT NULL COMMENT '创建时间',
 	
 	PRIMARY KEY (id)
 );
@@ -51,7 +52,7 @@ CREATE TABLE feedback
 	PRIMARY KEY (id)
 );
 
-
+ 
 DROP TABLE IF EXISTS device;
 
 CREATE TABLE device
@@ -59,6 +60,8 @@ CREATE TABLE device
 
 	id     	    BIGINT(20) NOT NULL COMMENT '主键ID',
 	tenant_id   BIGINT(20) NOT NULL COMMENT '租户ID',
+	
+    user_id     	    BIGINT(20) NOT NULL COMMENT '用户ID',
 
 	nickname    VARCHAR(30) NULL DEFAULT NULL COMMENT '昵称',
 	product_key VARCHAR(30) NULL DEFAULT NULL COMMENT '产品key',

@@ -7,9 +7,13 @@
         <id column="id" property="id"/>
         <result column="mobile" property="mobile"/>
         <result column="username" property="username"/>
+                
+   		<collection property="deviceList" javaType="ArrayList" column="id" ofType="come.helapu.lynx.entity.Device"                
+            select="selectDeviceListByUserId">
+        </collection>
+		
     </resultMap>
-
-
+    
 	<!-- 通用查询结果列 -->
 	<sql id="Base_Column_List">
 		id, nickname, username, mobile
@@ -27,20 +31,15 @@
 		</where>
 	</select>
 	
-	<select id="selectOne" resultType="com.helapu.lynx.entity.User">
-		SELECT * FROM USER
-		<!-- 判断 wrapper 是否为空 emptyOfWhere -->
-		<where>
-			${ew.sqlSegment}
-		</where>
-		
-		LIMIT 1
-	</select>
+	<resultMap id="userDeviceListResult" type="com.helapu.lynx.entity.User">
+		<result property="id" column="user_id" />
+		<result property="username" column="username" />
+		<result property="mobile" column="mobile" />
+	  <collection property="deviceList" javaType="ArrayList" column="id" ofType="com.helapu.lynx.entity.Device" select="selectDeviceForUser"/>
+	</resultMap>
 	
-	<select id="findByMobile" resultType="com.helapu.lynx.entity.User">
-		SELECT * FROM USER
-		WHERE mobile = #{mobile}
-		LIMIT 1
+	<select id="selectDeviceForUser" resultType="com.helapu.lynx.entity.Device">
+	  SELECT * FROM device WHERE user_id = #{id}
 	</select>
 	
 </mapper>

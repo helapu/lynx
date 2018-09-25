@@ -1,5 +1,6 @@
 package com.helapu.lynx.common;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import com.yunpian.sdk.model.SmsSingleSend;
 
 public class YunpianUtil {
 		
-	static public String sendVerifyCode(String mobile, String code) {
+	static public Map<String, Object> sendVerifyCode(String mobile, String code) {
 		
 		
 		//初始化clnt,使用单例方式
@@ -33,7 +34,11 @@ public class YunpianUtil {
 		//释放clnt
 		clnt.close();
 		
-		return resultMsg;
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("code", r.getCode());
+		result.put("msg", resultMsg);
+		
+		return result;
 	}
 	
 	

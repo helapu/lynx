@@ -16,12 +16,17 @@ import com.helapu.lynx.common.BCrypt;
 import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.config.properties.JWTProperties;
+import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.entity.Verifycode;
 import com.helapu.lynx.mapper.UserMapper;
 import com.helapu.lynx.service.IUserService;
 import com.helapu.lynx.service.IVerifycodeService;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.*;
@@ -58,7 +63,9 @@ public class SessionController extends ApiController {
     	if ( BCrypt.checkpw(password, user.getEncryptedPassword() ) ) {
     		
     		logger.warn("login success and mobile: " + user.getMobile());
-    		return this.success( JWTUtil.sign(user.getMobile()) );
+    		String token = JWTUtil.sign(user.getMobile());
+    		logger.debug("token " + token);
+    		return this.success( token );
     	}else {
     		return this.failed(ErrorCode.USER_PASSWORD);
     	}
@@ -76,18 +83,33 @@ public class SessionController extends ApiController {
     	User user = userService.getOne(new QueryWrapper<User>()
     			.lambda().eq(User::getMobile, mobile));
     	
+    	logger.debug("user " + user);
     	Verifycode lastRegisterCode = verifycodeService.getOne(new QueryWrapper<Verifycode>()
     			.lambda().eq(Verifycode::getMobile, mobile)
     			.eq(Verifycode::getType, "register")
-    			.eq(Verifycode::getCode, code));
+    			.eq(Verifycode::getCode, code)
+    			);
     	//
+    	logger.debug("code" + lastRegisterCode);
+    	
 		// 校验验证码
     	if (lastRegisterCode == null) {
     		return this.failed(ErrorCode.VERIFYCODE_NOTFOUND);
     	}
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	 
+		Calendar beforeTime = Calendar.getInstance();
+		beforeTime.add(Calendar.MINUTE, -3);// 3分钟之前的时间
+		beforeTime.getTime();
+		Date beforeD = beforeTime.getTime();
+		
+		if ( lastRegisterCode.getCreatedAt().before(Timestamp.valueOf(sdf.format(beforeD) ))) {
+			return this.failed(ErrorCode.VERIFYCODE_EXPIRED);
+		}
+    	
     	if(user != null) {
     		return this.failed(ErrorCode.USER_EXIST);
-
     	}
     	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
@@ -95,8 +117,6 @@ public class SessionController extends ApiController {
 		newUser.setMobile(mobile);
 		newUser.setEncryptedPassword( hashed );
 		userService.save(newUser);
-		
-		
 		
 		return this.success(newUser);
     	
@@ -131,8 +151,17 @@ public class SessionController extends ApiController {
     }
     @PostMapping("/test")
     public R<Object> test(String password) {
+    	logger.warn("非验证测试接口");
     	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-    	return this.success(hashed);
+    	//return this.success(hashed);
+    	User user = userService.findDeviceListByUserId("1043035908489740290");
+    	
+    	logger.debug("test user: " + user.getMobile());
+    	
+    	List<Device> deviceList = user.getDeviceList();
+    	
+    	deviceList.stream().forEach(item -> logger.warn("uu" + item));
+    	return this.success(deviceList);
     }
 
 }

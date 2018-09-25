@@ -1,5 +1,7 @@
 package com.helapu.lynx.entity;
 
+import java.sql.Timestamp;
+
 public class Verifycode extends SuperEntity<Verifycode> {
 
 	private static final long serialVersionUID = 1L;
@@ -9,12 +11,21 @@ public class Verifycode extends SuperEntity<Verifycode> {
 	private String type;
 	private Integer resultCode;
 	private String message;
+	private Timestamp createdAt;
 	
-	
-	public Verifycode(String code, String mobile, String type, String message) {
+
+
+
+//	[java.lang.Long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.sql.Timestamp, java.lang.Long]
+
+	public Verifycode() {
+		
+	}
+	public Verifycode(String code, String mobile, String type, Integer resultCode, String message) {
 		this.code = code;
 		this.mobile = mobile;
 		this.type = type;
+		this.resultCode = resultCode;
 		this.message = message;
 	}
 	
@@ -49,7 +60,19 @@ public class Verifycode extends SuperEntity<Verifycode> {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
 
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	@Override
+	public String toString() {
+		return "Verifycode [Mobile:" + this.getMobile()
+				+ ", code:" + this.getCode()
+				+ ", msg:" + this.getMessage();
+	}
+	
 }

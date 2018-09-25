@@ -25,7 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/api/devcies")
+@RequestMapping("/api/devices")
 @Api(tags="设备管理")
 public class DeviceController extends ApiController {
 	
@@ -36,25 +36,31 @@ public class DeviceController extends ApiController {
 	private IUserService userService;
 	
     // 关注设备列表
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value="设备列表")
-    public R<Object> device_list() {
-
+    public R<Object> device_list(Page page, boolean listMode) {
+    	if (listMode) {
+    		page.setSize(-1);
+    	}
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
-    	IPage<Device> pagedDevices = deviceService.page(new Page<Device>(1, 5), new QueryWrapper<Device>().orderByDesc("name"));
+    	IPage<Device> pagedDevices = deviceService.page(page, new QueryWrapper<Device>());
 
     	return this.success(pagedDevices);
     }
     
     @GetMapping("/{device_key}")
     @ApiOperation(value="设备列表")
-    public R<Object> showDevice() {
+    public R<Object> showDevice(
+    		String deviceKey) {
 
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
+    	
     	IPage<Device> pagedDevices = deviceService.page(new Page<Device>(1, 5), new QueryWrapper<Device>().orderByDesc("name"));
 
+    	deviceService.getOne(new QueryWrapper<Device>()
+    			.lambda().eq(Device::getDeviceKey, deviceKey));
     	return this.success(pagedDevices);
     }
     
