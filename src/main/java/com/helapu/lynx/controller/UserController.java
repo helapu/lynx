@@ -2,6 +2,9 @@ package com.helapu.lynx.controller;
 
 
 
+
+import java.util.List;
+
 import javax.validation.constraints.Size;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.helapu.lynx.common.BCrypt;
-
+import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.service.IUserService;
 import io.swagger.annotations.Api;
@@ -22,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/users")
-@Api(tags="用户信息")
+@Api(tags="用户")
 public class UserController extends ApiController {
 
     @Autowired
@@ -75,6 +80,22 @@ public class UserController extends ApiController {
     	user.setNickname(nickname);
     	
     	userService.save(user);
+    	return this.success(user);
+    }
+    
+    // 搜索用户
+    @PostMapping("/search_username")
+    @ApiOperation(value="搜索用户")
+    public R<Object> searchUsername(
+    		@Size(min=11, max=11, message="手机号码为11位")
+    		@RequestParam String mobile) {
+    	//
+    	List<User> userList = userService.list(new QueryWrapper<User>()
+    			.lambda().eq(User::getMobile, mobile));
+    	if( userList.size() == 0) {
+    		return this.failed(ErrorCode.USER_NOT_EXIST);
+    	}
+    	User user = userList.get(0);
     	return this.success(user);
     }
     

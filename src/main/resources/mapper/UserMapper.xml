@@ -18,10 +18,14 @@
 	<sql id="Base_Column_List">
 		id, nickname, username, mobile
 	</sql>
-
-	<delete id="deleteAll">
-		DELETE FROM USER
-	</delete>
+	
+	<select id="selectList"  resultType="com.helapu.lynx.entity.User">
+		SELECT  *
+		FROM user
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
 
 	<select id="selectListByWrapper" resultType="com.helapu.lynx.entity.User">
 		SELECT * FROM USER
@@ -29,17 +33,6 @@
 		<where>
 			${ew.sqlSegment}
 		</where>
-	</select>
-	
-	<resultMap id="userDeviceListResult" type="com.helapu.lynx.entity.User">
-		<result property="id" column="user_id" />
-		<result property="username" column="username" />
-		<result property="mobile" column="mobile" />
-	  <collection property="deviceList" javaType="ArrayList" column="id" ofType="com.helapu.lynx.entity.Device" select="selectDeviceForUser"/>
-	</resultMap>
-	
-	<select id="selectDeviceForUser" resultType="com.helapu.lynx.entity.Device">
-	  SELECT * FROM device WHERE user_id = #{id}
 	</select>
 	
 </mapper>

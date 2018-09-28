@@ -12,9 +12,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.helapu.lynx.entity.enums.AgeEnum;
 import com.helapu.lynx.entity.enums.PhoneEnum;
 
+import lombok.Data;
+
 /**
  * 用户表
  */
+
 public class User extends SuperEntity<User> {
 
 	private static final long serialVersionUID = 1L;
@@ -23,15 +26,15 @@ public class User extends SuperEntity<User> {
     private String username;
     
     private String mobile;
+    private String email;
     private String encryptedPassword;
-    private String lastLoginAt;
+    private String loginAt;
     private String createdAt;
-    
-    private List<Device> deviceList;
-    
+        
     
     public User() {
     }
+    
     public User(String nickname) {
     	this.nickname = nickname;
     }
@@ -54,17 +57,23 @@ public class User extends SuperEntity<User> {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getEncryptedPassword() {
 		return encryptedPassword;
 	}
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
-	public String getLastLoginAt() {
-		return lastLoginAt;
+	public String getLoginAt() {
+		return loginAt;
 	}
-	public void setLastLoginAt(String lastLoginAt) {
-		this.lastLoginAt = lastLoginAt;
+	public void setLoginAt(String loginAt) {
+		this.loginAt = loginAt;
 	}
 	public String getCreatedAt() {
 		return createdAt;
@@ -73,16 +82,12 @@ public class User extends SuperEntity<User> {
 		this.createdAt = createdAt;
 	}
 	
-	public List<Device> getDeviceList() {
-		return deviceList;
-	}
-	public void setDeviceList(List<Device> deviceList) {
-		this.deviceList = deviceList;
-	}
+
 	@Override
     public String toString() {
 		return "User id: " + this.getId()
 		        + "tenant_id: " + this.getTenantId()
+		        + "nickname: " + this.getNickname()
 				+ " mobile: " + this.getMobile()
 				+ " username: " + this.getMobile()
 				+ " password: " + this.getEncryptedPassword();

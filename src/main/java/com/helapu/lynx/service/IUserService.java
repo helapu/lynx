@@ -11,18 +11,12 @@ import com.helapu.lynx.entity.User;
  * User 表数据服务层接口
  *
  */
-public interface IUserService extends IService<User> {
-
-	boolean deleteAll();
-//
-	public List<User> selectListBySQL();
-//
-	public List<User> selectListByWrapper(Wrapper wrapper);
+public interface IUserService extends IService<User> {    
+    
+    public List<User> findListByWrapper(Wrapper wrapper);
     
     public User getOneByMobile(String mobile);
     
-    public User getOne(Wrapper wrapper);
-    
-    public List<Device> findDeviceListByUserId(String userId);
+    public User getOneById(String userId);
     
 }

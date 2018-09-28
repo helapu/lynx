@@ -1,6 +1,7 @@
 package com.helapu.lynx.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,18 +11,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.helapu.lynx.common.BCrypt;
 import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.config.properties.JWTProperties;
 import com.helapu.lynx.entity.Device;
+import com.helapu.lynx.entity.Follow;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.entity.Verifycode;
 import com.helapu.lynx.mapper.UserMapper;
+import com.helapu.lynx.service.IDeviceService;
+import com.helapu.lynx.service.IFollowService;
 import com.helapu.lynx.service.IUserService;
 import com.helapu.lynx.service.IVerifycodeService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -34,7 +43,14 @@ import javax.validation.constraints.*;
 
 @RestController
 @RequestMapping("/auth")
+@Api(tags="会话管理")
 public class SessionController extends ApiController {
+	
+	@Autowired
+	private IFollowService followService;
+	
+	@Autowired
+    private IDeviceService deviceService;
 	
     @Autowired
     private IUserService userService;
@@ -42,11 +58,8 @@ public class SessionController extends ApiController {
     @Autowired
     private IVerifycodeService verifycodeService;
     
-	
-    @Autowired
-	private JWTProperties jwtPropertis;
-	
     @PostMapping("/login")
+    @ApiOperation(value="登录")
     public R<Object> login(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile,
@@ -60,6 +73,7 @@ public class SessionController extends ApiController {
     		return this.failed(ErrorCode.USER_NOT_EXIST);
     	}
     	
+    	logger.debug("user" + user);
     	if ( BCrypt.checkpw(password, user.getEncryptedPassword() ) ) {
     		
     		logger.warn("login success and mobile: " + user.getMobile());
@@ -72,6 +86,7 @@ public class SessionController extends ApiController {
     }
     
     @PostMapping("/register")
+    @ApiOperation(value="注册")
     public R<Object> register(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile,
@@ -123,6 +138,7 @@ public class SessionController extends ApiController {
     }
 
     @PostMapping("/forgot")
+    @ApiOperation(value="忘记密码")
     public R<Object> forgot(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile,
@@ -149,19 +165,23 @@ public class SessionController extends ApiController {
     	}
     	
     }
+    
     @PostMapping("/test")
+    @ApiOperation(value="测试")
     public R<Object> test(String password) {
     	logger.warn("非验证测试接口");
     	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-    	//return this.success(hashed);
-    	User user = userService.findDeviceListByUserId("1043035908489740290");
     	
-    	logger.debug("test user: " + user.getMobile());
+    	logger.warn("hashed: " + hashed);
     	
-    	List<Device> deviceList = user.getDeviceList();
+//    	IPage<User> userList = userService.page(new Page<User>(1, 12), null);
+//    	userList.getRecords().stream().forEach(item -> logger.warn("uu" + item));
+//    	
     	
-    	deviceList.stream().forEach(item -> logger.warn("uu" + item));
-    	return this.success(deviceList);
+    	List<Follow> followList = followService.list(null);
+    	
+    	List<User> userList = userService.list(new QueryWrapper<User>().lambda().like(User::getTenantId, "1"));
+    	return this.success(followList);
     }
 
 }

@@ -75,12 +75,10 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         
         //session
-        
-        User u = new User();
-        u.setNickname("nihao");
+        User user = this.userService.getOne(new QueryWrapper<User>().lambda().eq(User::getMobile, username));
         Subject subject =SecurityUtils.getSubject();
-        subject.getSession().setAttribute("user", u);
-
+        subject.getSession().setAttribute("user", user);
+        
         return new SimpleAuthenticationInfo(token, token, "my_realm");
     }
 }

@@ -1,6 +1,11 @@
 package com.helapu.lynx;
 
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,4 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface SuperMapper<T> extends BaseMapper<T> {
 
     // 这里可以放一些公共的方法
+
+    List<T> selectListByWrapper(@Param("ew") Wrapper wrapper);
+	
+	
 }

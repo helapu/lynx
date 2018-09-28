@@ -21,36 +21,19 @@ import com.helapu.lynx.service.IUserService;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 	
-    public User getOneByMobile(String mobile) {
-    	return baseMapper.findByMobile(mobile);
-    }
-
-    @Override
-    public User getOne(Wrapper wrapper) {
-    	return baseMapper.selectOne(wrapper);
-    }
-
 	@Override
-	public boolean deleteAll() {
-		return retBool(baseMapper.deleteAll());
-	}
-
-	@Override
-	public List<User> selectListBySQL() {
-		return baseMapper.selectListBySQL();
-	}
-
-	@Override
-	public List<User> selectListByWrapper(Wrapper wrapper) {
+    public List<User> findListByWrapper(Wrapper wrapper) {
 		return baseMapper.selectListByWrapper(wrapper);
-	}
-	
-    public User getByMobile(String mobile) {
+    }
+    
+    public User getOneByMobile(String mobile) {
     	return baseMapper.selectOne(new QueryWrapper<User>()
     			.lambda().eq(User::getMobile, mobile));
     }
-
-    public List<Device> findDeviceListByUserId(String userId) {
-    	return baseMapper.selectDeviceList(userId);
+    
+    public User getOneById(String userId) {
+    	return baseMapper.selectOne(new QueryWrapper<User>()
+    			.lambda().eq(User::getId, userId));
     }
+    
 }

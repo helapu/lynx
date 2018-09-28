@@ -20,7 +20,15 @@ public enum ErrorCode implements IErrorCode {
 	JWT_HEADER_NULL(1006, "未提供Authorization"),
 	JWT_HEADER_FORMAT(1007, "Authorization格式错误或者过期"),
 	
+	// 设备
 	
+	DEVICE_FORBIDDEN(1008, "无权查看相关设备"),
+	FOLLOW_NOT_FOUNT(1009, "当前关注信息不在当前用户下"),
+	DEVICE_NOT_FOUNT(1010, "设备不存在"),
+	FOLLOWED(1011, "您已经关注当前设备了"),
+	
+	// 分享
+	SHARE_MAX(1012, "一个设备最多分享给20人"),
 	// 系统错误
 	
 	SERVER_ERROR(500, "服务器内部错误,请联系王小波处理"),

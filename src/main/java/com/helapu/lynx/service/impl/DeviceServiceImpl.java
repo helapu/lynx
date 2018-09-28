@@ -12,13 +12,4 @@ import com.helapu.lynx.service.IDeviceService;
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
 
-	@Override
-	public boolean deleteAll() {
-		return retBool(baseMapper.deleteAll());
-	}
-
-	@Override
-	public List<Device> selectListBySQL() {
-		return baseMapper.selectListBySQL();
-	}
 }

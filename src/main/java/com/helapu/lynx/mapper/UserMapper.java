@@ -15,16 +15,10 @@ import com.helapu.lynx.entity.User;
  */
 public interface UserMapper extends SuperMapper<User> {
 
+	List<User> selectList(@Param("ew") Wrapper wrapper);
+
+//    List<User> selectListByWrapper(@Param("ew") Wrapper wrapper);
 	
-    int deleteAll();
-
-    @Select("select test_id as id, name, age, test_type from user")
-    List<User> selectListBySQL();
-
-    List<User> selectListByWrapper(@Param("ew") Wrapper wrapper);
-    
-    List<Device> selectDeviceList(@Param("userId") String userId);
-    
-    User findByMobile(@Param("mobile") String mobile);
-    
+//	User selectByMobile(@Param("mobile") String mobile);
+	
 }
