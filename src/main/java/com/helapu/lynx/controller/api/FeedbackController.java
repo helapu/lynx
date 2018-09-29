@@ -1,4 +1,4 @@
-package com.helapu.lynx.controller;
+package com.helapu.lynx.controller.api;
 
 import java.sql.Timestamp;
 
@@ -51,6 +51,7 @@ public class FeedbackController extends ApiController {
     	User user = (User)subject.getSession().getAttribute("user");
     	
     	Feedback feedback = new Feedback();
+    	feedback.setUserId(user.getId());
     	feedback.setContent(content);
     	feedback.setCreatedAt( new Timestamp(System.currentTimeMillis()));
     	feedbackService.save(feedback);

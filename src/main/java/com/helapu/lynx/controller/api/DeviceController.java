@@ -1,4 +1,4 @@
-package com.helapu.lynx.controller;
+package com.helapu.lynx.controller.api;
 
 import java.util.List;
 
@@ -32,9 +32,8 @@ import io.swagger.annotations.ApiOperation;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
-
 @RestController
-@RequestMapping("/api/follows")
+@RequestMapping("/api/devices")
 @Api(tags="设备")
 public class DeviceController extends ApiController {
 	
@@ -83,7 +82,7 @@ public class DeviceController extends ApiController {
     }
     
     // 新增设备
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation(value="新增设备列表")
     public R<Object> create(
     		String deviceKey) {
@@ -101,15 +100,13 @@ public class DeviceController extends ApiController {
     			.lambda().eq(Follow::getUserId, user.getId())
     			.eq(Follow::getDeviceId, device.getId()));
     	
-//    	Follow follow = followService.getOne(new QueryWrapper<Follow>()
-//    			.lambda().eq(Follow::getUserId, user.getId())
-//    					 .eq(Follow::getDeviceId, device.getId()));
     	if(followList.size() == 1 ) {
     		return this.failed(ErrorCode.FOLLOWED);
     	}
     	
-    	List<Follow> followListOfShare = followService.list(new QueryWrapper<Follow>()
-    			.lambda().eq(Follow::getDeviceId, device.getId()));
+    	List<Follow> followListOfShare = followService.findListByIDs(user.getId(), device.getId());
+//    	//followService.list(new QueryWrapper<Follow>()
+//    			.lambda().eq(Follow::getDeviceId, device.getId()));
     	
     	if(followListOfShare.size() > 20) {
     		return this.failed(ErrorCode.SHARE_MAX);
@@ -168,8 +165,11 @@ public class DeviceController extends ApiController {
     	Follow follow = followList.get(0);
     	follow.setActive(false);
     	followService.save(follow);
-    	    	
-    	return this.success("设备列表");
+    	
+    	Device device = deviceService.getOne(new QueryWrapper<Device>()
+    			.lambda().eq(Device::getId, follow.getDeviceId()));
+    	
+    	return this.success(device);
     }
     
     // 历史数据记录
@@ -180,7 +180,7 @@ public class DeviceController extends ApiController {
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
     	
-    	return this.success("设备列表");
+    	return this.success("history_data 还没有实现");
     }
     
     // 报警事件记录
@@ -191,7 +191,7 @@ public class DeviceController extends ApiController {
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
     	
-    	return this.success("设备列表");
+    	return this.success("history_alarm 还没有实现");
     }
 }
 

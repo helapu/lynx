@@ -1,4 +1,4 @@
-package com.helapu.lynx.controller;
+package com.helapu.lynx.controller.api;
 
 
 

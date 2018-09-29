@@ -19,15 +19,13 @@
 		id, nickname, username, mobile
 	</sql>
 	
-	<select id="selectList"  resultType="com.helapu.lynx.entity.Follow">
+	<select id="selectListByIDs"  resultType="com.helapu.lynx.entity.Follow">
 		SELECT  follow.*, user.mobile, device.nickname, device.product_key, device.device_key, device.device_secret
 		FROM user
 		JOIN follow ON user.id = follow.user_id
 		JOIN device ON follow.device_id = device.id
 		
-		<where>
-			${ew.sqlSegment}
-		</where>
+		WHERE follow.user_id = ${userId} AND device.id = ${deviceId}
 		
 	</select>
 	
@@ -41,7 +39,5 @@
 		</where>
 		LIMIT 1
 	</select>
-	
-
 	
 </mapper>

@@ -1,4 +1,4 @@
-package com.helapu.lynx.controller;
+package com.helapu.lynx.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,6 +105,7 @@ public class SessionController extends ApiController {
     			.eq(Verifycode::getCode, code)
     			);
     	//
+		
     	logger.debug("code" + lastRegisterCode);
     	
 		// 校验验证码
