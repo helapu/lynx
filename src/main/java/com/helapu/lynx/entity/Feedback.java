@@ -2,10 +2,13 @@ package com.helapu.lynx.entity;
 
 import java.sql.Timestamp;
 
-public class Feedback {
+public class Feedback extends SuperEntity<User> {
+	
 	private Long userId;
 	private String content;
 	private Timestamp createdAt;
+	
+	
 	public Long getUserId() {
 		return userId;
 	}

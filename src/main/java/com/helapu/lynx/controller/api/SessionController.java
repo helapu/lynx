@@ -79,6 +79,7 @@ public class SessionController extends ApiController {
     		logger.warn("login success and mobile: " + user.getMobile());
     		String token = JWTUtil.sign(user.getMobile());
     		logger.debug("token " + token);
+    		user.setLoginAt(new Timestamp(System.currentTimeMillis()));
     		return this.success( token );
     	}else {
     		return this.failed(ErrorCode.USER_PASSWORD);
@@ -132,6 +133,8 @@ public class SessionController extends ApiController {
 		User newUser = new User();
 		newUser.setMobile(mobile);
 		newUser.setEncryptedPassword( hashed );
+		
+		newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		userService.save(newUser);
 		
 		return this.success(newUser);

@@ -19,7 +19,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.helapu.lynx.common.YunpianUtil;
+import com.helapu.lynx.config.ErrorCode;
+import com.helapu.lynx.entity.User;
 import com.helapu.lynx.entity.Verifycode;
+import com.helapu.lynx.service.IUserService;
 import com.helapu.lynx.service.IVerifycodeService;
 
 import io.swagger.annotations.Api;
@@ -33,17 +36,36 @@ public class VerifycodeController extends ApiController {
 	@Autowired
 	private IVerifycodeService verifycodeService;
 	
+	@Autowired
+	private IUserService userService;
+	
 	@PostMapping("/register")
     @ApiOperation(value="注册验证码")
     public R<Object> register(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile) {
+		
+		User user = userService.getOne(new QueryWrapper<User>()
+    			.lambda().eq(User::getMobile, mobile));
+    	
+    	if(user != null) {
+    		return this.failed(ErrorCode.USER_EXIST);
+    	}
+    	
 		return sendCode(mobile, "register");
     }
     
 	@PostMapping("/forgot")
     @ApiOperation(value="注册验证码")
-    public R<Object> forgot(String mobile) {
+    public R<Object> forgot(
+    		@Size(min=11, max=11, message="手机号码为11位")
+    		@RequestParam String mobile) {
+		User user = userService.getOne(new QueryWrapper<User>()
+    			.lambda().eq(User::getMobile, mobile));
+    	
+    	if(user == null) {
+    		return this.failed(ErrorCode.USER_NOT_EXIST);
+    	}
 		return sendCode(mobile, "forgot");
     }
 	

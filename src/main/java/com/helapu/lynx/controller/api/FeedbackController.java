@@ -43,7 +43,7 @@ public class FeedbackController extends ApiController {
     
     @PostMapping("")
     @ApiOperation(value="app反馈")
-    public R<Object> login(
+    public R<Object> create(
     		@Size(min=8, max=200, message="提交内容")
     		@RequestParam String content) {
     	//

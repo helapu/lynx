@@ -1,5 +1,6 @@
 package com.helapu.lynx.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class User extends SuperEntity<User> {
     private String mobile;
     private String email;
     private String encryptedPassword;
-    private String loginAt;
-    private String createdAt;
+    private Timestamp loginAt;
+    private Timestamp createdAt;
         
     
     public User() {
@@ -69,19 +70,21 @@ public class User extends SuperEntity<User> {
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
-	public String getLoginAt() {
+	public Timestamp getLoginAt() {
 		return loginAt;
 	}
-	public void setLoginAt(String loginAt) {
+
+	public void setLoginAt(Timestamp loginAt) {
 		this.loginAt = loginAt;
 	}
-	public String getCreatedAt() {
+
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(String createdAt) {
+
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
-	
 
 	@Override
     public String toString() {

@@ -5,7 +5,7 @@
 
 	<groupId>com.helapu</groupId>
 	<artifactId>lynx</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>jar</packaging>
 
 	<name>lynx</name>
@@ -115,6 +115,17 @@
 		    <artifactId>springfox-swagger-ui</artifactId>
 		    <version>2.9.2</version>
 		</dependency>
+
+		<!-- 前端模板引擎 -->		
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
 		
 		<!-- starter web -->
 		<dependency>
