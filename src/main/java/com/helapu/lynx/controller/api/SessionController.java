@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.helapu.lynx.aliyun.oss.AppletOSS;
 import com.helapu.lynx.common.BCrypt;
 import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
@@ -32,6 +34,10 @@ import com.helapu.lynx.service.IVerifycodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,6 +63,9 @@ public class SessionController extends ApiController {
     
     @Autowired
     private IVerifycodeService verifycodeService;
+    
+//    @Autowired
+//    private IAppletOssService  appletOssService;
     
     @PostMapping("/login")
     @ApiOperation(value="登录")
@@ -153,20 +162,46 @@ public class SessionController extends ApiController {
     	//
     	
     	User user = userService.getOne(new QueryWrapper<User>()
-    			.eq("mobile", mobile));
-    	if(user == null) {
-    		return this.failed(ErrorCode.USER_EXIST);
-
-    	}else {
-
-    		// TODO 校验验证码
-    		
-        	String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
-    		user.setEncryptedPassword( hashed );
-    		userService.save(user);
-    		
-    		return this.success(user);
+    			.lambda().eq(User::getMobile, mobile));
+    	
+    	logger.debug("user " + user);
+    	Verifycode lastForgotCode = verifycodeService.getOne(new QueryWrapper<Verifycode>()
+    			.lambda().eq(Verifycode::getMobile, mobile)
+    			.eq(Verifycode::getType, "forgot")
+    			.eq(Verifycode::getCode, code)
+    			);
+    	//
+		
+    	logger.debug("code" + lastForgotCode);
+    	
+		// 校验验证码
+    	if (lastForgotCode == null) {
+    		return this.failed(ErrorCode.VERIFYCODE_NOTFOUND);
     	}
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	 
+		Calendar beforeTime = Calendar.getInstance();
+		beforeTime.add(Calendar.MINUTE, -3);// 3分钟之前的时间
+		beforeTime.getTime();
+		Date beforeD = beforeTime.getTime();
+		
+		if ( lastForgotCode.getCreatedAt().before(Timestamp.valueOf(sdf.format(beforeD) ))) {
+			return this.failed(ErrorCode.VERIFYCODE_EXPIRED);
+		}
+    	
+    	if(user == null) {
+    		return this.failed(ErrorCode.USER_NOT_EXIST);
+    	}
+    	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+
+
+		user.setEncryptedPassword( hashed );
+		
+//		userService.save(user);
+		userService.update(user, null);
+		
+		return this.success(user);
     	
     }
     
@@ -178,14 +213,32 @@ public class SessionController extends ApiController {
     	
     	logger.warn("hashed: " + hashed);
     	
-//    	IPage<User> userList = userService.page(new Page<User>(1, 12), null);
-//    	userList.getRecords().stream().forEach(item -> logger.warn("uu" + item));
-//    	
+    	AppletOSS appletOSS  = new AppletOSS();
+    	appletOSS.justTest("hello");
     	
-    	List<Follow> followList = followService.list(null);
+    	return this.success(hashed);
+    }
+    
+    @PostMapping("/upload")
+    @ApiOperation(value="文件上传")
+    public R<Object> upload(
+    		@RequestParam("image") MultipartFile uploadfile) {
+    	if (uploadfile.isEmpty()) {
+    		return this.failed("file is empty");
+    	}else {
+    		try {
+    			byte[] bytes = uploadfile.getBytes();
+//                Path path = Paths.get("/home/helapuWork/" + uploadfile.getOriginalFilename());
+    			Path path = Paths.get("/home/helapu/Work/hello.png");
+                Files.write(path, bytes);
+        		return this.success("ok ");
+
+    		} catch (IOException e) {
+    			return this.failed(e.getMessage());
+    		}
+    		
+    	}
     	
-    	List<User> userList = userService.list(new QueryWrapper<User>().lambda().like(User::getTenantId, "1"));
-    	return this.success(followList);
     }
 
 }

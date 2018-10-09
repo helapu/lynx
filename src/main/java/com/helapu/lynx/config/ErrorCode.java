@@ -29,11 +29,16 @@ public enum ErrorCode implements IErrorCode {
 	
 	// 分享
 	SHARE_MAX(1012, "一个设备最多分享给20人"),
-	// 系统错误
 	
+	// 短信
+	
+	SMS_THREE(1013, "一分子最多发送三条短信"),
+		
+	// 系统错误
+	NOT_FOUNT(404, "访问信息不存在"),
 	SERVER_ERROR(500, "服务器内部错误,请联系王小波处理"),
 	JWTFORMAT(333, "jwt格式错误"),
-	
+	NOT_SUPPORT(501, "接口暂未实现..."),
 	
 	// 常规反馈
 	

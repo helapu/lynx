@@ -56,7 +56,7 @@ public class VerifycodeController extends ApiController {
     }
     
 	@PostMapping("/forgot")
-    @ApiOperation(value="注册验证码")
+    @ApiOperation(value="忘记密码验证码")
     public R<Object> forgot(
     		@Size(min=11, max=11, message="手机号码为11位")
     		@RequestParam String mobile) {
@@ -93,7 +93,7 @@ public class VerifycodeController extends ApiController {
 		
 		logger.warn("verifycodes count " + lastCodes);
 		if (lastCodes > 3) {
-			return this.failed("一分钟最多发送三条短信");
+			return this.failed(ErrorCode.SMS_FAILED);
 		}
 		
     	String code = sb.toString();

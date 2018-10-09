@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +28,8 @@ public class AdminDeviceController {
 
 	@Autowired
 	private IDeviceService deviceService;
+	
+
 	
 	// 设备列表
     @GetMapping("")

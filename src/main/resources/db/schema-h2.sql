@@ -104,5 +104,36 @@ CREATE TABLE feedback
 	PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS rent;
 
+CREATE TABLE rent
+(
+	id     	    BIGINT(20) NOT NULL COMMENT '主键ID',
+	tenant_id   BIGINT(20) NOT NULL COMMENT '租户ID',
+
+	company_name    VARCHAR(200) NOT NULL COMMENT '公司名称',
+	company_mobile  VARCHAR(16) NULL DEFAULT NULL COMMENT '绑定手机号码',
+	deposit         DECIMAL(10,2) DEFAULT 0.0  COMMENT '租赁押金',
+	rent_type       VARCHAR(20) NULL DEFAULT NULL  COMMENT '租赁时间计算单位', 
+	price           DECIMAL(10,2) DEFAULT 0.0  COMMENT '每单位时间租赁金额',
+
+	rent_at         DATETIME NULL DEFAULT NULL COMMENT '开始租赁计算时间',
+	rent_content    VARCHAR(400)  DEFAULT NULL COMMENT '租赁物品描述',     
+	
+	active          TINYINT NULL DEFAULT 0  COMMENT '是否激活',
+	status          VARCHAR(20) NULL DEFAULT NULL COMMENT '租赁状态', -- 正在租赁 -> 
+
+	PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS rent_apply;
+
+CREATE TABLE rent_apply
+(
+	id     	    BIGINT(20) NOT NULL COMMENT '主键ID',
+	tenant_id   BIGINT(20) NOT NULL COMMENT '租户ID',
+
+	apply_content   VARCHAR(400) DEFAULT NULL COMMENT '申请租赁信息',		
+	PRIMARY KEY (id)
+);
 

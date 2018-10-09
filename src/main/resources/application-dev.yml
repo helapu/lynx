@@ -42,18 +42,10 @@ spring:
     
   #mysql
   # 本地测试数据库
-#  datasource:
-#    url: jdbc:mysql://localhost/lynx_dev
-#    username: lynx
-#    password: lynx123456
-#    db-name: lynx_dev #用来搜集数据库的所有表
-#    filters: wall,mergeStat
-    
-  # 阿里云测试服务器
   datasource:
-    url: jdbc:mysql://rm-wz95z557r606o19cs0o.mysql.rds.aliyuncs.com/lynx_dev
+    url: jdbc:mysql://localhost/lynx_dev
     username: lynx
-    password: lynx_0101
+    password: lynx123456
     db-name: lynx_dev #用来搜集数据库的所有表
     filters: wall,mergeStat
     

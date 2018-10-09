@@ -5,7 +5,7 @@
 
 	<groupId>com.helapu</groupId>
 	<artifactId>lynx</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<packaging>jar</packaging>
 
 	<name>lynx</name>
@@ -32,6 +32,13 @@
 
 	<dependencies>
 		
+		<!-- 阿里云oss -->
+		<dependency>
+	        <groupId>com.aliyun.oss</groupId>
+	        <artifactId>aliyun-sdk-oss</artifactId>
+	        <version>2.8.3</version>
+	    </dependency>
+    
 		<!-- 云片网短信 -->
 		<dependency>
 		    <groupId>com.yunpian.sdk</groupId>

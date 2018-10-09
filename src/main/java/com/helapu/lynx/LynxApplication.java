@@ -3,11 +3,17 @@ package com.helapu.lynx;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.helapu.lynx.entity.Device;
+import com.helapu.lynx.service.IDeviceService;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -21,7 +27,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.helapu.lynx.config",
         "com.helapu.lynx.controller",
         "com.helapu.lynx.service",
-        "com.helapu.lynx.service.impl"})
+        "com.helapu.lynx.service.impl",
+        "com.helapu.lynx.aliyun.oss",
+        "com.helapu.lynx.aliyun.oss.impl"})
 public class LynxApplication {
 
     protected final static Logger logger = LoggerFactory.getLogger(LynxApplication.class);
@@ -44,6 +52,21 @@ public class LynxApplication {
      * 方式二：http://localhost:8080/user/pagehelper?size=1&current=1<br>
      * </p>
      */
+    @Autowired
+	private IDeviceService deviceService;
+	
+
+	@Bean
+	public Converter<String, Device> deviceConverter() {
+		return new Converter<String, Device>() {
+			@Override
+			public Device convert(String id) {
+				
+				return deviceService.getById(id);
+//				return messageRepository().findMessage(Long.valueOf(id));
+			}
+		};
+	}
     
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(LynxApplication.class);
