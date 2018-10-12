@@ -24,3 +24,14 @@ INSERT INTO follow (id, tenant_id, user_id, device_id, nickname) VALUES
 (1, 1, 1, 1, 'follow1'),
 (2, 1, 1, 2, 'follow2'),
 (3, 1, 1, 3, 'follow3');
+
+
+-- 租赁数据
+
+INSERT INTO rent_order (id, tenant_id, mobile, content, created_at) VALUES
+(1, 1, '13825279842', 'content', '2018-09-30 11:31:56');
+
+INSERT INTO rent_order_item (id, tenant_id, rent_order_id, rent_good, amount) VALUES
+(1, 1, 1, 'SMOKEDETECTION_V1', 4.0),
+(2, 1, 1, 'AUTOMATIC_EXTINGUISHING_V1', 922.0);
+

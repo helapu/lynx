@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.helapu.lynx.aliyun.oss.AppletOSS;
+//import com.helapu.lynx.aliyun.oss.AppletOSS;
 import com.helapu.lynx.common.BCrypt;
 import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
@@ -25,6 +26,7 @@ import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.entity.Follow;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.entity.Verifycode;
+import com.helapu.lynx.entity.enums.GoodIdentifierEnum;
 import com.helapu.lynx.mapper.UserMapper;
 import com.helapu.lynx.service.IDeviceService;
 import com.helapu.lynx.service.IFollowService;
@@ -34,6 +36,7 @@ import com.helapu.lynx.service.IVerifycodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,12 +46,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.*;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Api(tags="会话管理")
 public class SessionController extends ApiController {
 	
@@ -205,40 +210,4 @@ public class SessionController extends ApiController {
     	
     }
     
-    @PostMapping("/test")
-    @ApiOperation(value="测试")
-    public R<Object> test(String password) {
-    	logger.warn("非验证测试接口");
-    	String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-    	
-    	logger.warn("hashed: " + hashed);
-    	
-    	AppletOSS appletOSS  = new AppletOSS();
-    	appletOSS.justTest("hello");
-    	
-    	return this.success(hashed);
-    }
-    
-    @PostMapping("/upload")
-    @ApiOperation(value="文件上传")
-    public R<Object> upload(
-    		@RequestParam("image") MultipartFile uploadfile) {
-    	if (uploadfile.isEmpty()) {
-    		return this.failed("file is empty");
-    	}else {
-    		try {
-    			byte[] bytes = uploadfile.getBytes();
-//                Path path = Paths.get("/home/helapuWork/" + uploadfile.getOriginalFilename());
-    			Path path = Paths.get("/home/helapu/Work/hello.png");
-                Files.write(path, bytes);
-        		return this.success("ok ");
-
-    		} catch (IOException e) {
-    			return this.failed(e.getMessage());
-    		}
-    		
-    	}
-    	
-    }
-
 }

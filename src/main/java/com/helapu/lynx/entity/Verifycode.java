@@ -13,9 +13,7 @@ public class Verifycode extends SuperEntity<Verifycode> {
 	private String message;
 	private Timestamp createdAt;
 	
-
-
-
+	
 //	[java.lang.Long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.sql.Timestamp, java.lang.Long]
 
 	public Verifycode() {

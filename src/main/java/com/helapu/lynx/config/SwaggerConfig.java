@@ -28,7 +28,7 @@ public class SwaggerConfig{
                 // 是否开启
                 .enable( true ).select()
                 // 扫描的路径包
-                .apis(RequestHandlerSelectors.basePackage("com.helapu.lynx.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.helapu.lynx.controller.api"))
                 // 指定路径处理PathSelectors.any()代表所有的路径
                 .paths(PathSelectors.any()).build().pathMapping("/");
     }

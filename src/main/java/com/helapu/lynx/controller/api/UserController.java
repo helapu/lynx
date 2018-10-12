@@ -3,6 +3,7 @@ package com.helapu.lynx.controller.api;
 
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.validation.constraints.Size;
@@ -19,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.helapu.lynx.common.BCrypt;
+import com.helapu.lynx.common.JWTUtil;
 import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.service.IUserService;
@@ -54,18 +56,23 @@ public class UserController extends ApiController {
     @PostMapping("/change_password")
     @ApiOperation(value="修改密码")
     public R<Object> changePassword(
-    		@Size(min=11, max=11, message="手机号码为11位")
-    		@RequestParam String new_password,
-    		@Size(min=4, max=4, message="4位验证码")
-    		@RequestParam String code) {
+    		@Size(min=6, max=24, message="密码为6-24位")
+    		@RequestParam String old_password,
+    		@Size(min=6, max=24, message="密码为6-24位")
+    		@RequestParam String new_password) {
     	//
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
-    	String hashed = BCrypt.hashpw(new_password, BCrypt.gensalt(12));
-    	user.setEncryptedPassword(hashed);
     	
-    	userService.save(user);
-    	return this.success(user);
+    	if ( BCrypt.checkpw(old_password, user.getEncryptedPassword() ) ) {
+    		
+        	String hashed = BCrypt.hashpw(new_password, BCrypt.gensalt());
+        	user.setEncryptedPassword(hashed);
+        	userService.update(user, null);
+    		return this.success( user );
+    	}else {
+    		return this.failed(ErrorCode.USER_PASSWORD);
+    	}
     }
     
     // 设置昵称
@@ -79,11 +86,11 @@ public class UserController extends ApiController {
     	User user = (User)subject.getSession().getAttribute("user");
     	user.setNickname(nickname);
     	
-    	userService.save(user);
+    	userService.update(user, null);
     	return this.success(user);
     }
     
-    // 搜索用户
+    // 根据手机号码搜索用户
     @PostMapping("/search_username")
     @ApiOperation(value="搜索用户")
     public R<Object> searchUsername(

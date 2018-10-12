@@ -2,28 +2,40 @@ package com.helapu.lynx.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
-import com.helapu.lynx.entity.enums.RentTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.helapu.lynx.entity.enums.RentStatusEnum;
-
+import com.helapu.lynx.entity.enums.RentTypeEnum;
 
 @SuppressWarnings("serial")
-public class Rent extends SuperEntity<Rent> {
-	
+public class RentDeal extends SuperEntity<RentDeal> {
 	private String companyName;
 	private String companyMobile;
 	private BigDecimal deposit;
 	private RentTypeEnum rentType;
 	private BigDecimal price;
 	private Timestamp rentAt;
-	private String rentContent;
+	private String comment;
 	private Boolean active;
 	private RentStatusEnum status;
 	
     @TableField(exist = false)
 	private BigDecimal withdrawalBalance;
-	
+    
+    @TableField(exist = false)
+    private List<RentDealItem> rentDealItems;
+    
+    public RentDeal() {
+    	
+    }
+    public BigDecimal getWithdrawalBalance() {
+		// 根据deposit和租赁方式计算剩余可退押金
+		return this.deposit.subtract(this.price);
+	}
+	public void setWithdrawalBalance(BigDecimal withdrawalBalance) {
+		this.withdrawalBalance = withdrawalBalance;
+	}
 	
 	public String getCompanyName() {
 		return companyName;
@@ -61,11 +73,11 @@ public class Rent extends SuperEntity<Rent> {
 	public void setRentAt(Timestamp rentAt) {
 		this.rentAt = rentAt;
 	}
-	public String getRentContent() {
-		return rentContent;
+	public String getComment() {
+		return comment;
 	}
-	public void setRentContent(String rentContent) {
-		this.rentContent = rentContent;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	public Boolean getActive() {
 		return active;
@@ -79,13 +91,12 @@ public class Rent extends SuperEntity<Rent> {
 	public void setStatus(RentStatusEnum status) {
 		this.status = status;
 	}
-	public BigDecimal getWithdrawalBalance() {
-		// 根据deposit和租赁方式计算剩余可退押金
-		return this.deposit.subtract(this.price);
+	public List<RentDealItem> getRentDealItems() {
+		return rentDealItems;
 	}
-	public void setWithdrawalBalance(BigDecimal withdrawalBalance) {
-		this.withdrawalBalance = withdrawalBalance;
+	public void setRentDealItems(List<RentDealItem> rentDealItems) {
+		this.rentDealItems = rentDealItems;
 	}
 	
-
+	
 }

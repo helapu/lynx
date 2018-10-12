@@ -4,20 +4,21 @@ import com.baomidou.mybatisplus.core.enums.IEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum AgeEnum implements IEnum<Integer> {
-    ONE(1, "一岁"),
-    TWO(2, "二岁");
-
-    private Integer value;
+public enum GoodUnitEnum implements IEnum<String> {
+	
+	AMOUNT("AMOUNT", "数量"),
+	AREA("AREA", "面积");
+    
+    private String value;
     private String desc;
 
-    AgeEnum(final Integer value, final String desc) {
+    GoodUnitEnum(final String value, final String desc) {
         this.value = value;
         this.desc = desc;
     }
 
     @Override
-    public Integer getValue() {
+    public String getValue() {
         return this.value;
     }
 

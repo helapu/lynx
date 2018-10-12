@@ -13,6 +13,7 @@ import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
@@ -54,16 +55,15 @@ public class ShiroConfig {
          * 自定义url规则
          * http://shiro.apache.org/web.html#urls-
          */
-        Map<String, String> filterRuleMap = new HashMap<>();
+        Map<String, String> filterRuleMap = new LinkedHashMap<>();
         
-        filterRuleMap.put("/auth/**", "anon");
+        filterRuleMap.put("/api/public/**", "anon");
+        filterRuleMap.put("/api/auth/**", "anon");
+
         filterRuleMap.put("/swagger-resources/**", "anon");
         filterRuleMap.put("/swagger-ui.html", "anon");        
         filterRuleMap.put("/api/**", "jwt");
         
-        filterRuleMap.put("/greeting", "anon");
-
-
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/401", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);

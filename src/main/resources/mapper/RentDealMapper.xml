@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.helapu.lynx.mapper.RentDealMapper">
+	
+	<resultMap id="rentDealResultMap" type="com.helapu.lynx.entity.RentDeal">
+        <id column="id" property="id"/>
+		          
+   		<collection property="rentDealItems" javaType="ArrayList" column="rent_deal_id" ofType="com.helapu.lynx.entity.RentDealItem"                
+            select="selectRentDealItemForRentDeal">            
+        </collection>
+		
+    </resultMap>
+	
+	<select id="selectRentDealItemForRentDeal" resultType="com.helapu.lynx.entity.RentDealItem">
+		SELECT *
+		FROM rent_deal_item
+		WHERE rent_deal_id=#{rent_deal_id}
+	</select>
+	
+	<select id="selectPage" resultMap="rentDealResultMap">
+		SELECT *, rent_deal.id as rent_deal_id
+		FROM rent_deal
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<select id="selectOne" resultMap="rentDealResultMap">
+		SELECT *, rent_deal.id as rent_deal_id
+		FROM rent_deal
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<select id="selectById" resultMap="rentDealResultMap">
+		SELECT *, rent_deal.id as rent_deal_id
+		FROM rent_deal
+		WHERE id=#{id}
+	</select>
+	
+	<select id="selectRentDealByMobile" resultMap="rentDealResultMap">
+		SELECT *, rent_deal.id as rent_deal_id
+		FROM rent_deal
+		WHERE rent_deal.company_mobile = #{company_mobile}
+
+	</select>
+	
+	
+	<select id="selectRentDealByMobileuu" resultMap="rentDealResultMap">
+		SELECT A.* ,B.*
+		
+		FROM rent_deal A  LEFT OUTER JOIN rent_deal_item B ON A.id = B.rent_deal_id
+		WHERE A.company_mobile = #{company_mobile}
+
+	</select>
+	
+</mapper>

@@ -103,8 +103,8 @@ public class JWTFilter extends OncePerRequestFilter {
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
         String authorization = req.getHeader("Authorization");
-//        return authorization != null;
-        return true;
+        return authorization != null;
+//        return true;
     }
 
     /**

@@ -21,12 +21,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.helapu.lynx.config.ErrorCode;
 import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.entity.Follow;
-import com.helapu.lynx.entity.Rent;
+import com.helapu.lynx.entity.RentDeal;
 import com.helapu.lynx.entity.User;
 import com.helapu.lynx.entity.enums.RentStatusEnum;
 import com.helapu.lynx.service.IDeviceService;
 import com.helapu.lynx.service.IFollowService;
-import com.helapu.lynx.service.IRentService;
+import com.helapu.lynx.service.IRentDealService;
 import com.helapu.lynx.service.IUserService;
 
 import io.swagger.annotations.Api;
@@ -37,16 +37,16 @@ import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api/rents")
-@Api(tags="设备")
-public class RentController extends ApiController {
+@Api(tags="租赁订单")
+public class RentDealController extends ApiController {
 	
 	@Autowired
-	private IRentService rentService;
+	private IRentDealService rentDealService;
 	
 	@Autowired
 	private IUserService userService;
 	
-    // 关注设备列表
+    // 租赁列表
     @GetMapping("")
     @ApiOperation(value="租赁列表")
     public R<Object> list(Page page, boolean listMode) {
@@ -56,46 +56,29 @@ public class RentController extends ApiController {
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
     	
-    	logger.warn("user" + user);
-    	
-    	IPage<Rent> rentPage = rentService.page(page, new QueryWrapper<Rent>()
+    	IPage<RentDeal> rentPage = rentDealService.page(page, new QueryWrapper<RentDeal>()
     			.lambda()
-    			.eq(Rent::getCompanyMobile, user.getMobile()));
+    			.eq(RentDeal::getCompanyMobile, user.getMobile()));
+    	
     	return this.success( rentPage );
     }
     
     @GetMapping("/{rent_id}")
-    @ApiOperation(value="查看租赁信息")
+    @ApiOperation(value="根据ID查看租赁信息")
     public R<Object> show(
     		String rentId) {
 
-    	logger.debug("rentId" + rentId);
-    	Subject subject = SecurityUtils.getSubject();
-    	User user = (User)subject.getSession().getAttribute("user");
-    	
-    	rentService.getById(rentId);
-    	List<Rent> rentList = rentService.list(new QueryWrapper<Rent>()
-    			.lambda().eq(Rent::getId, rentId) );
-
-    	if (rentList.size() != 1) {
-    		return this.failed(ErrorCode.NOT_FOUNT);
-    	}
-    	
-    	Rent rent = rentList.get(0);
-
-    	return this.success(rent);
+//    	logger.debug("rentId" + rentId);
+//    	Subject subject = SecurityUtils.getSubject();
+//    	User user = (User)subject.getSession().getAttribute("user");
+   	
+    	return this.success( rentDealService.getById(rentId) );
     }
     
     // 新增设备
     @PostMapping("")
     @ApiOperation(value="新增")
-    public R<Object> create(
-    		String deviceKey) {
-
-    	Subject subject = SecurityUtils.getSubject();
-    	User user = (User)subject.getSession().getAttribute("user");
-
-    	
+    public R<Object> create() {    	
     	return this.failed(ErrorCode.NOT_SUPPORT);
     }
     
@@ -107,12 +90,10 @@ public class RentController extends ApiController {
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User)subject.getSession().getAttribute("user");
     	
-//
-//    	
-//    	Rent rent = rentService.getById(rentId);
-//    	rent.setStatus(RentStatusEnum.TALKWITH);
+    	RentDeal rentDeal = rentDealService.getById(rentId);
+    	rentDeal.setStatus(RentStatusEnum.TALKWITH);
 
-    	return this.success(user);
+    	return this.success( rentDeal );
     }
 }
 

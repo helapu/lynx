@@ -17,7 +17,6 @@ public class AliyunProperties {
 	private static String accessKeyId;
 	private static String accessKeySecret;
 	private static String bucketName;
-	
 		
 	public static String getEndpoint() {
 		return AliyunProperties.endpoint;
