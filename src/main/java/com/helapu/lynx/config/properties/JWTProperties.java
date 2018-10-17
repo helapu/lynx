@@ -18,7 +18,6 @@ public class JWTProperties {
 	public static Integer getInvalidate() {
 		return invalidate;
 	}
-	
 	@Value("${jwt.invalidate}")
 	public void setInvalidate(Integer invalidate) {
 		JWTProperties.invalidate = invalidate;
@@ -28,7 +27,6 @@ public class JWTProperties {
 	public static String getSecret() {
 		return secret;
 	}
-
 	@Value("${jwt.secret}")
 	public void setSecret(String secret) {
 		JWTProperties.secret = secret;

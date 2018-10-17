@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -109,7 +110,7 @@ public class NonAuthController extends ApiController {
     
     @PostMapping("/otp")
     @ApiOperation(value="非确定参数处理")
-    public R<Object> unmask(HttpServletRequest request) {
+    public R<Object> otp(HttpServletRequest request) {
     	
     	logger.warn("request: " + request.getRemoteHost());
     	

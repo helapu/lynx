@@ -109,8 +109,6 @@ CREATE TABLE follow
 	PRIMARY KEY (id)
 );
 
-
-
 -- 语音通知 短信通知 邮件通知
 
 DROP TABLE IF EXISTS event_notice;
