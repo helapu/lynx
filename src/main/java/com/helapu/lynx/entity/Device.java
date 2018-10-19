@@ -1,24 +1,25 @@
 package com.helapu.lynx.entity;
 
+import com.helapu.lynx.entity.enums.ProductEnum;
 
 @SuppressWarnings("serial")
 public class Device extends SuperEntity<Device> {
 	
 	private Long userId;
 	
-	private String nickname;
-	private String productKey;
-	private String deviceKey;
-	private String deviceSecret;
+	private String nickname; //昵称
+	private ProductEnum product; //产品key
+	private String deviceKey; //设备key
+	private String deviceSecret; //设备secret
 	private String iotid;
-	private String utcActive;
+	//添加时间
+	private String utcActive; //激活时间
 	private String status;
-	private String region;
-	private String nodeType;
-	private String utcOnline;
-	private String ipAddress;
-	private String firmwareVersion;
-	
+	private String region; //区域
+	private String nodeType; //节点类型
+	private String utcOnline; //最后上线时间
+	private String ipAddress; //IP地址
+	private String firmwareVersion; //固件版本
 	
 	public long getUserId() {
 		return userId;
@@ -33,11 +34,11 @@ public class Device extends SuperEntity<Device> {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public String getProductKey() {
-		return productKey;
+	public ProductEnum getProduct() {
+		return product;
 	}
-	public void setProductKey(String productKey) {
-		this.productKey = productKey;
+	public void setProduct(ProductEnum product) {
+		this.product = product;
 	}
 	public String getDeviceKey() {
 		return deviceKey;
@@ -100,7 +101,4 @@ public class Device extends SuperEntity<Device> {
 		this.firmwareVersion = firmwareVersion;
 	}
 	
-	
-
-
 }

@@ -18,14 +18,8 @@ import com.helapu.lynx.telecom.AuthUtil;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
-
-
-
-
-
-
-
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -37,6 +31,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.helapu.lynx.common.youzan.TokenService;
+import com.helapu.lynx.common.youzan.entity.AuthTokenParams;
 import com.helapu.lynx.config.TelecomRunner;
 import com.helapu.lynx.config.properties.TelecomProperties;
 
@@ -49,23 +46,38 @@ import com.iotplatform.client.dto.ClientInfo;
 import com.iotplatform.client.dto.CommandDTOV4;
 import com.iotplatform.client.dto.CreateDeviceCmdCancelTaskInDTO;
 import com.iotplatform.client.dto.CreateDeviceCmdCancelTaskOutDTO;
+import com.iotplatform.client.dto.NotifyDeviceDataChangedDTO;
+import com.iotplatform.client.dto.NotifyDeviceDatasChangedDTO;
+import com.iotplatform.client.dto.NotifyDeviceInfoChangedDTO;
+import com.iotplatform.client.dto.NotifyServiceInfoChangedDTO;
 import com.iotplatform.client.dto.PostDeviceCommandInDTO2;
 import com.iotplatform.client.dto.PostDeviceCommandOutDTO2;
 import com.iotplatform.client.dto.QueryDeviceCmdCancelTaskInDTO2;
 import com.iotplatform.client.dto.QueryDeviceCmdCancelTaskOutDTO2;
 import com.iotplatform.client.dto.QueryDeviceCommandInDTO2;
 import com.iotplatform.client.dto.QueryDeviceCommandOutDTO2;
+import com.iotplatform.client.dto.SubDeviceDataInDTO;
+import com.iotplatform.client.dto.SubscriptionDTO;
 import com.iotplatform.client.dto.UpdateDeviceCommandInDTO;
 import com.iotplatform.client.dto.UpdateDeviceCommandOutDTO;
 import com.iotplatform.client.invokeapi.Authentication;
+import com.iotplatform.client.invokeapi.PushMessageReceiver;
 import com.iotplatform.client.invokeapi.SignalDelivery;
+import com.iotplatform.client.invokeapi.SubscriptionManagement;
+import com.yunpian.sdk.util.JsonUtil;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+import okhttp3.RequestBody;
 
-
-
-
-
-
+//
+//import org.apache.commons.lang3.StringUtils;
+//import org.apache.http.entity.ContentType;
+//import com.fasterxml.jackson.core.type.TypeReference;
+//import com.youzan.open.sdk.client.oauth.model.OAuthToken;
+//import com.youzan.open.sdk.util.http.DefaultHttpClient;
+//import com.youzan.open.sdk.util.http.HttpClient;
+//import com.youzan.open.sdk.util.json.JsonUtils;
 
 
 @EnableTransactionManagement
@@ -77,28 +89,10 @@ import com.iotplatform.client.invokeapi.SignalDelivery;
         "com.helapu.lynx.service.impl",
         "com.helapu.lynx.aliyun.oss",
         "com.helapu.lynx.aliyun.oss.impl"})
-public class LynxApplication {
+public class LynxApplication   {
 
     protected final static Logger logger = LoggerFactory.getLogger(LynxApplication.class);
     
-    /**
-     * <p>
-     * 测试 RUN<br>
-     * 查看 h2 数据库控制台：http://localhost:8080/console<br>
-     * 使用：JDBC URL 设置 jdbc:h2:mem:lynx 用户名 sa 密码 sa 进入，可视化查看 user 表<br>
-     * 误删连接设置，开发机系统本地 ~/.h2.server.properties 文件<br>
-     * <br>
-     * 1、http://localhost:8080/user/test<br>
-     * 2、http://localhost:8080/user/test1<br>
-     * 3、http://localhost:8080/user/test2<br>
-     * 4、http://localhost:8080/user/test3<br>
-     * 5、http://localhost:8080/user/add<br>
-     * 6、http://localhost:8080/user/selectsql<br>
-     * 7、分页 size 一页显示数量  current 当前页码
-     * 方式一：http://localhost:8080/user/page?size=1&current=1<br>
-     * 方式二：http://localhost:8080/user/pagehelper?size=1&current=1<br>
-     * </p>
-     */
     @Autowired
 	private IDeviceService deviceService;
     
@@ -121,8 +115,59 @@ public class LynxApplication {
         logger.info("PortalApplication is success!");
         System.err.println("sample started. http://localhost:8080/api/auth/test");
 	    
-        LynxApplication.justForTest();
+//        LynxApplication.getToken();
+        
+//        LynxApplication.justForTest();
+        
+        Retrofit retrofit = new Retrofit.Builder()
+        	    .baseUrl("https://open.youzan.com/")
+                .addConverterFactory(JacksonConverterFactory.create())
+        	    .build();
+
+        TokenService tokenS = retrofit.create(TokenService.class);
+        try {
+    		ObjectMapper mapperObj = new ObjectMapper();
+    		AuthTokenParams authParams = new AuthTokenParams();
+    		authParams.setClient_id("578dcba00bc300539b");
+    		authParams.setClient_secret("d133449a0b11d555fd8c9ca5a0ba61de");
+    		authParams.setGrant_type("silent");
+    		authParams.setKdt_id("41119237");
+        	Map<String, String> map = new HashMap<String, String>();
+        	map.put("client_id", "");
+        	map.put("client_secret", "d133449a0b11d555fd8c9ca5a0ba61de");
+        	map.put("grant_type", "silent"); //grant_type
+        	
+        	map.put("kdt_id", "41119237");
+			String jsonString = mapperObj.writeValueAsString(authParams);
+       	
+        	RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonString);
+        	
+        	logger.warn("" + tokenS.getToken(body).execute().body());
+
+        }catch (IOException e) {
+        	logger.warn(e.getMessage());
+        }
     }
+    
+//    public static void getToken() {
+//
+//        HttpClient httpClient = new DefaultHttpClient();
+//        HttpClient.Params params = HttpClient.Params.custom()
+//
+//              .add("client_id", "test")  
+//              .add("client_secret", "test")                    
+//              .add("grant_type", "silent")            
+//              .add("kdt_id","823456")
+//        .setContentType(ContentType.APPLICATION_FORM_URLENCODED).build();
+//        String resp = httpClient.post("https://open.youzan.com/oauth/token", params);
+//        System.out.println(resp);
+//        if (StringUtils.isBlank(resp) || !resp.contains("access_token")) {
+//            throw new RuntimeException(resp);
+//        }
+//        
+//        logger.warn("uu");
+//        logger.warn("" + JsonUtils.toBean(resp, new TypeReference<OAuthToken>() { }) );
+//    }
     
     private static void justForTest() {
     	logger.warn("TelecomRunner: ");
@@ -225,6 +270,24 @@ public class LynxApplication {
         }
         System.out.println(qdcctOutDTO.toString());
         
+        // 订阅
+      //得到NorthApiClient实例后，再使用northApiClient得到订阅类实例 
+        SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient); 
+         
+        //先设置好subDeviceData的第一个入参SubDeviceDataInDTO结构体 
+        SubDeviceDataInDTO sddInDTO = new SubDeviceDataInDTO(); 
+        sddInDTO.setNotifyType("deviceDataChanged"); 
+        //需要根据实际情况修改回调的ip和端口 
+        sddInDTO.setCallbackUrl("http://yitaihuian.wang:80/api/public/v1.0.0/messageReceiver"); 
+        try {
+            //调用订阅类实例subscriptionManagement提供的业务接口，如subDeviceData 
+            SubscriptionDTO subDTO = subscriptionManagement.subDeviceData(sddInDTO, null, accessToken); 
+            System.out.println(subDTO.toString()); 
+            logger.info("订阅成功 nice...");
+        } catch (NorthApiException e) { 
+            System.out.println(e.toString()); 
+            logger.info("订阅失败...");
+        }
     }
     
     @SuppressWarnings("unchecked")

@@ -78,7 +78,7 @@ telecom:
   app-secret: wW8M8IVPkFJajFQ7dzOmR0rIk8Aa
   
   server:
-    port: 8099
+    port: 8080
     ssl:
       #one-way authentication (server-auth)
       key-store: ./src/main/resources/tomcat.keystore
@@ -98,6 +98,11 @@ telecom:
 #    test: 50FE6401E867A34BD533FE67BB85EDABFED62CEA9D8E3F5516E7B48D01F21A5F
 #
 
-
+# 有赞商城开放平台
+youzan:
+  client-id: 578dcba00bc300539b
+  client-secret: d133449a0b11d555fd8c9ca5a0ba61de
+  grant-type: silent
+  kdt-id: 41119237
 
                        

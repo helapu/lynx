@@ -5,7 +5,7 @@
 
 	<groupId>com.helapu</groupId>
 	<artifactId>lynx</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.8</version>
 	<packaging>jar</packaging>
 
 	<name>lynx</name>
@@ -31,7 +31,7 @@
 	</properties>
 
 	<dependencies>
-		 	 
+		
 		<dependency>
 			<groupId>net.sf.json-lib</groupId> 
 			<artifactId>json-lib</artifactId>
@@ -40,6 +40,8 @@
 		</dependency>
 
 		<!-- 电信物联网API -->
+		
+		<!--
 		<dependency>
 			<groupId>com.telecom</groupId>
 			<artifactId>iot</artifactId>
@@ -47,7 +49,14 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/api-client-1.0.0.jar</systemPath>
 		</dependency>
-		
+		-->
+
+		<dependency>
+			<groupId>com.tianyiiot</groupId>
+			<artifactId>api-client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+				
 		<!-- 阿里云物联网套件 https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-iot -->
 		<dependency>
 		    <groupId>com.aliyun</groupId>
@@ -135,6 +144,26 @@
             <version>3.4.0</version>
         </dependency>
         
+        <!-- HTTP客户端 -->
+        <dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>retrofit</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.squareup.retrofit2</groupId>
+		    <artifactId>converter-jackson</artifactId>
+		    <version>2.4.0</version>
+		</dependency>
+		
+		<!-- Guava基础工具包 -->
+        <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.0-jre</version>
+		</dependency>
+
         <!-- 参数校验 -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -198,7 +227,7 @@
 			</plugin>
 			
 		</plugins>
+		
 	</build>
-
-
+	
 </project>

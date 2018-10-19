@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.helapu.lynx.common.BCrypt;
+import com.helapu.lynx.common.youzan.entity.YouzanPushMessage;
 import com.helapu.lynx.entity.RentDeal;
 import com.helapu.lynx.entity.RentOrder;
 import com.helapu.lynx.entity.enums.GoodIdentifierEnum;
@@ -32,8 +33,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/api/public")
-@Api(tags="公开数据")
+@RequestMapping("/api/nonauth")
+@Api(tags="非验证访问")
 public class NonAuthController extends ApiController {
 	
 	@Autowired
@@ -105,16 +106,6 @@ public class NonAuthController extends ApiController {
     		}
     		
     	}
-    	
-    }
-    
-    @PostMapping("/otp")
-    @ApiOperation(value="非确定参数处理")
-    public R<Object> otp(HttpServletRequest request) {
-    	
-    	logger.warn("request: " + request.getRemoteHost());
-    	
-    	return this.success("ok" + request.getParameterNames());
     	
     }
     
