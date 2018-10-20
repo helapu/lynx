@@ -17,7 +17,6 @@ import com.helapu.lynx.common.youzan.entity.YouzanPushMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
-import sun.security.provider.MD5;
 
 @RestController
 @RequestMapping("/api/public/youzan")

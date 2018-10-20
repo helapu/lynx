@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,19 +30,17 @@ public class AdminDeviceController {
 	@Autowired
 	private IDeviceService deviceService;
 	
-
-	
 	// 设备列表
     @GetMapping("")
-    public ModelAndView greeting() {
-    	
-    	List<Device> devices = deviceService.list(null);
-    	return new ModelAndView("admin/devices/index", "devices", devices);
+    public String list(ModelMap model) {
+    	List<Device> deviceList = deviceService.list(null);
+    	model.addAttribute("list", deviceList);
+        return "admin/devices/list";
     }
 
     // 查看一个具体的设备
 	@GetMapping("/{id}")
-	public ModelAndView show(@PathVariable("id") Device device) {
+	public ModelAndView detail(@PathVariable("id") Device device) {
 		return new ModelAndView("admin/devices/show", "device", device);
 	}
 	

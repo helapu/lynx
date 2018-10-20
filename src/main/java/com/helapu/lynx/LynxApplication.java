@@ -11,6 +11,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.templateresolver.UrlTemplateResolver;
 
 import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.service.IDeviceService;
@@ -107,7 +113,7 @@ public class LynxApplication   {
 			}
 		};
 	}
-    
+	
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(LynxApplication.class);
 //        app.setBannerMode(Banner.Mode.OFF);

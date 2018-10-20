@@ -49,7 +49,7 @@ public class DeviceController extends ApiController {
     // 关注设备列表
     @GetMapping("")
     @ApiOperation(value="设备列表")
-    public R<Object> list(Page page, boolean listMode) {
+    public R<Object> index(Page page, boolean listMode) {
     	if (listMode) {
     		page.setSize(-1);
     	}
