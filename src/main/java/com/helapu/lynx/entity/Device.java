@@ -1,5 +1,8 @@
 package com.helapu.lynx.entity;
 
+import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.helapu.lynx.entity.enums.ProductEnum;
 
 @SuppressWarnings("serial")
@@ -12,15 +15,28 @@ public class Device extends SuperEntity<Device> {
 	private String deviceKey; //设备key
 	private String deviceSecret; //设备secret
 	private String iotid;
-	//添加时间
-	private String utcActive; //激活时间
+	private LocalDateTime activeAt; //激活时间
 	private String status;
 	private String region; //区域
 	private String nodeType; //节点类型
-	private String utcOnline; //最后上线时间
+	private LocalDateTime onlineAt; //最后上线时间
 	private String ipAddress; //IP地址
 	private String firmwareVersion; //固件版本
 	
+	@TableField(exist = false)
+	private String productKey;
+	
+	@TableField(exist = false)
+	private String productNickname;
+	
+	//
+	
+	public String getProductKey() {
+		return this.product.getKey();
+	}
+	public String getProductNickname() {
+		return this.product.getNickname();
+	}
 	public long getUserId() {
 		return userId;
 	}
@@ -58,12 +74,7 @@ public class Device extends SuperEntity<Device> {
 	public void setIotid(String iotid) {
 		this.iotid = iotid;
 	}
-	public String getUtcActive() {
-		return utcActive;
-	}
-	public void setUtcActive(String utcActive) {
-		this.utcActive = utcActive;
-	}
+	
 	public String getStatus() {
 		return status;
 	}
@@ -82,11 +93,18 @@ public class Device extends SuperEntity<Device> {
 	public void setNodeType(String nodeType) {
 		this.nodeType = nodeType;
 	}
-	public String getUtcOnline() {
-		return utcOnline;
+	
+	public LocalDateTime getActiveAt() {
+		return activeAt;
 	}
-	public void setUtcOnline(String utcOnline) {
-		this.utcOnline = utcOnline;
+	public void setActiveAt(LocalDateTime activeAt) {
+		this.activeAt = activeAt;
+	}
+	public LocalDateTime getOnlineAt() {
+		return onlineAt;
+	}
+	public void setOnlineAt(LocalDateTime onlineAt) {
+		this.onlineAt = onlineAt;
 	}
 	public String getIpAddress() {
 		return ipAddress;

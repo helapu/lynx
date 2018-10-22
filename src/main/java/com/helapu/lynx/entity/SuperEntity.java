@@ -20,7 +20,7 @@ public class SuperEntity<T extends Model> extends Model<T> {
 	@TableId(value="id", type= IdType.ID_WORKER)
     private Long id;
 	
-    private Long tenantId;
+//    private Long tenantId;
 
     public Long getId() {
         return this.id;
@@ -30,14 +30,14 @@ public class SuperEntity<T extends Model> extends Model<T> {
         this.id = id;
     }
 
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public SuperEntity setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-        return this;
-    }
+//    public Long getTenantId() {
+//        return tenantId;
+//    }
+//
+//    public SuperEntity setTenantId(Long tenantId) {
+//        this.tenantId = tenantId;
+//        return this;
+//    }
 
     @Override
     protected Serializable pkVal() {

@@ -1,5 +1,7 @@
 package com.helapu.lynx.controller.admin;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,10 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.helapu.lynx.entity.Device;
 import com.helapu.lynx.service.IDeviceService;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.helapu.lynx.controller.admin.BaseWebController;
 @Controller
 @RequestMapping("/admin/devices")
-public class AdminDeviceController {
+public class AdminDeviceController extends BaseWebController {
 
 	@Autowired
 	private IDeviceService deviceService;
@@ -40,8 +43,10 @@ public class AdminDeviceController {
 
     // 查看一个具体的设备
 	@GetMapping("/{id}")
-	public ModelAndView detail(@PathVariable("id") Device device) {
-		return new ModelAndView("admin/devices/show", "device", device);
+	public String detail(@PathVariable("id") Long deviceId, ModelMap model) {
+		Device device = deviceService.getById(deviceId);
+		model.addAttribute("device", device);
+		return "admin/devices/show";
 	}
 	
     // 新增设备
@@ -62,8 +67,15 @@ public class AdminDeviceController {
 		redirect.addFlashAttribute("globalMessage", "Successfully created a new message");
 		return new ModelAndView("redirect:/{message.id}", "message.id", device.getId());
 	}
-    // 修改设备
-    
+
+	// 修改设备
+	@GetMapping("/{id}/edit")
+	public String edit(@PathVariable("id") Long deviceId, ModelMap model) {
+		Device device = deviceService.getById(deviceId);
+		model.addAttribute("device", device);
+		return "admin/devices/edit";
+	}
+	
 	// 删除设备
 	@GetMapping(value = "/delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id) {
